@@ -4,7 +4,7 @@ use App\Http\Controllers\PublicCardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/admin');
 });
 
 // E-Membership Card - Public
