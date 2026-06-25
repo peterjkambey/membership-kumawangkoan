@@ -12,12 +12,11 @@ class CreateAdminUser extends Command
 
     public function handle(): int
     {
-        $user = User::factory()->create([
+        $user = User::create([
             'name' => $this->argument('name'),
             'email' => $this->argument('email'),
+            'password' => bcrypt($this->argument('password')),
         ]);
-        $user->password = bcrypt($this->argument('password'));
-        $user->save();
         $user->assignRole('super-admin');
 
         $this->info("Super admin created: {$user->email}");
