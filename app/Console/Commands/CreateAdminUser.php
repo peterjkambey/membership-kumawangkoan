@@ -15,7 +15,8 @@ class CreateAdminUser extends Command
         $user = User::create([
             'name' => $this->argument('name'),
             'email' => $this->argument('email'),
-            'password' => $this->argument('password'), // "hashed" cast will bcrypt
+            // "hashed" cast will bcrypt, so we pass plain text
+            'password' => $this->argument('password'),
         ]);
         $user->assignRole('super-admin');
 
