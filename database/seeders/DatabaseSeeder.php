@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             User::create([
                 'name' => 'Super Admin',
                 'email' => 'admin@kumawangkoan.org',
-                'password' => bcrypt('admin123'),
+                'password' => 'admin123', // "hashed" cast will bcrypt automatically
             ])->assignRole('super-admin');
         }
 
