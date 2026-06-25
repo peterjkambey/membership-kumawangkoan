@@ -1,0 +1,473 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* ============================================
+   🎨 KUMawangkoan Custom Theme
+   Inspired by Minahasa cultural heritage
+   ============================================ */
+
+/* ── Color Palette ── */
+:root {
+    --kuma-navy: #1a1a2e;
+    --kuma-deep: #16213e;
+    --kuma-gold: #d4a853;
+    --kuma-gold-light: #e8c97a;
+    --kuma-gold-dark: #b8913a;
+    --kuma-cream: #faf6f0;
+    --kuma-warm: #f5efe6;
+    --kuma-teal: #2d6a6b;
+    --kuma-teal-light: #3d8a8b;
+    --kuma-coral: #c75b5b;
+    --kuma-forest: #3a5a3a;
+}
+
+/* ── Global Overrides ── */
+.fi-sidebar {
+    background: linear-gradient(180deg, var(--kuma-navy) 0%, var(--kuma-deep) 100%) !important;
+}
+
+.fi-sidebar-header {
+    border-bottom: 1px solid rgba(212, 168, 83, 0.2) !important;
+}
+
+.fi-sidebar-item-label {
+    font-weight: 500 !important;
+}
+
+.fi-sidebar-item a {
+    border-radius: 8px !important;
+    margin: 2px 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+.fi-sidebar-item a:hover {
+    background: rgba(212, 168, 83, 0.15) !important;
+}
+
+.fi-sidebar-item-active a {
+    background: linear-gradient(135deg, rgba(212, 168, 83, 0.2), rgba(212, 168, 83, 0.05)) !important;
+    border-left: 3px solid var(--kuma-gold) !important;
+}
+
+/* ── Top Bar ── */
+.fi-topbar {
+    background: rgba(26, 26, 46, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(212, 168, 83, 0.15) !important;
+}
+
+.fi-topbar .fi-icon-btn {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.fi-topbar .fi-icon-btn:hover {
+    color: rgba(212, 168, 83, 1) !important;
+    background: rgba(212, 168, 83, 0.1) !important;
+}
+
+.fi-topbar .fi-dropdown-trigger button {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.fi-topbar .fi-dropdown-trigger button:hover {
+    color: var(--kuma-gold) !important;
+}
+
+/* ── Sidebar Dark Theme Enhancements ── */
+.fi-sidebar .fi-sidebar-header .fi-sidebar-header-logo-ctn {
+    padding: 1.5rem 1rem !important;
+}
+
+.fi-sidebar .fi-brand-name {
+    color: white !important;
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+}
+
+.fi-sidebar .fi-sidebar-group-label {
+    color: rgba(212, 168, 83, 0.6) !important;
+    font-size: 0.65rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    font-weight: 700 !important;
+}
+
+.fi-sidebar .fi-sidebar-item-label {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+}
+
+.fi-sidebar .fi-sidebar-item .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
+    color: white !important;
+}
+
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: var(--kuma-gold) !important;
+    font-weight: 600 !important;
+}
+
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+    background: linear-gradient(135deg, rgba(212, 168, 83, 0.15), rgba(212, 168, 83, 0.05)) !important;
+    border-left: 3px solid var(--kuma-gold) !important;
+}
+
+.fi-sidebar .fi-sidebar-item .fi-sidebar-item-btn svg {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-btn svg {
+    color: var(--kuma-gold) !important;
+}
+
+.fi-sidebar .fi-sidebar-item .fi-sidebar-item-btn:hover svg {
+    color: var(--kuma-gold-light) !important;
+}
+
+.fi-sidebar .fi-sidebar-group-collapse-btn {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.fi-sidebar .fi-sidebar-group-collapse-btn:hover {
+    color: var(--kuma-gold) !important;
+}
+
+/* ── Card & Widget Styles ── */
+.fi-widget-stats-overview-stat {
+    border-radius: 12px !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.fi-widget-stats-overview-stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--kuma-gold), var(--kuma-teal-light));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fi-widget-stats-overview-stat:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.fi-widget-stats-overview-stat:hover::before {
+    opacity: 1;
+}
+
+/* ── Table Styles ── */
+.fi-table {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+.fi-table thead th {
+    background: var(--kuma-cream) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.05em !important;
+    color: var(--kuma-navy) !important;
+}
+
+.fi-table tbody tr {
+    transition: all 0.2s ease !important;
+}
+
+.fi-table tbody tr:hover {
+    background: rgba(212, 168, 83, 0.05) !important;
+}
+
+/* ── Button Styles ── */
+button.fi-btn, a.fi-btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+button.fi-btn-primary {
+    background: linear-gradient(135deg, var(--kuma-gold), var(--kuma-gold-dark)) !important;
+}
+
+button.fi-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 168, 83, 0.4) !important;
+}
+
+/* ── Form Styles ── */
+.fi-input {
+    border-radius: 8px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    transition: all 0.2s ease !important;
+}
+
+.fi-input:focus {
+    border-color: var(--kuma-gold) !important;
+    box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.15) !important;
+}
+
+.fi-label {
+    font-weight: 600 !important;
+    color: var(--kuma-navy) !important;
+}
+
+/* ── Badge Styles ── */
+.fi-badge {
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    padding: 2px 10px !important;
+}
+
+/* ── Section Styles ── */
+.fi-section {
+    border-radius: 12px !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    overflow: hidden !important;
+}
+
+.fi-section-header {
+    background: var(--kuma-cream) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.fi-section-header-heading {
+    font-weight: 700 !important;
+    color: var(--kuma-navy) !important;
+}
+
+/* ── Animation Classes ── */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.fi-widget {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.fi-widget:nth-child(1) { animation-delay: 0s; }
+.fi-widget:nth-child(2) { animation-delay: 0.1s; }
+.fi-widget:nth-child(3) { animation-delay: 0.2s; }
+.fi-widget:nth-child(4) { animation-delay: 0.3s; }
+.fi-widget:nth-child(5) { animation-delay: 0.4s; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(212, 168, 83, 0.3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 168, 83, 0.5);
+}
+
+/* ── Loading Skeleton ── */
+.fi-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%) !important;
+    background-size: 200% 100% !important;
+    animation: shimmer 1.5s ease-in-out infinite !important;
+}
+
+/* ── Notification Toast ── */
+.fi-notification {
+    border-radius: 12px !important;
+    border-left: 4px solid var(--kuma-gold) !important;
+}
+
+/* ═══════════════════════════════════════
+   LOGIN PAGE — Fully Custom Design
+   ═══════════════════════════════════════ */
+
+body:has(.fi-simple-layout) {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%) !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fi-simple-layout {
+    background: transparent !important;
+    box-shadow: none !important;
+    max-width: 1000px !important;
+    width: 100% !important;
+    padding: 2rem !important;
+}
+
+.fi-simple-layout .fi-simple-layout__body {
+    display: flex !important;
+    background: white !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+    min-height: 550px !important;
+}
+
+/* ── Left Brand Panel ── */
+.fi-simple-layout .fi-simple-layout__body::before {
+    content: '';
+    flex: 1;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.fi-simple-layout .fi-simple-layout__body::after {
+    content: '🏛️' 'Perkumpulan' 'Kumawangkoan' 'Sistem informasi keanggotaan dan iuran berbasis digital untuk seluruh warga.';
+    position: absolute;
+    /* This is handled by the custom login view instead */
+    display: none;
+}
+
+/* ── Right Form Panel ── */
+.fi-simple-layout form {
+    width: 440px !important;
+    padding: 3rem 3.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+/* Hide the default Filament heading/logo area */
+.fi-simple-layout .fi-simple-layout__headings,
+.fi-simple-layout .fi-simple-layout__heading {
+    display: none !important;
+}
+
+/* ── Form Title ── */
+/* Re-use the form area to show our custom heading */
+.fi-simple-layout form > :first-child {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    color: #1a1a2e !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.fi-simple-layout form > :first-child::after {
+    content: 'Masuk ke dashboard administrasi';
+    display: block;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    color: #94a3b8 !important;
+    margin-top: 0.5rem !important;
+}
+
+/* ── Form Fields ── */
+.fi-simple-layout .fi-field {
+    margin-bottom: 1.5rem !important;
+}
+
+.fi-simple-layout .fi-field .fi-label {
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    color: #1a1a2e !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.fi-simple-layout .fi-field input {
+    width: 100% !important;
+    padding: 0.875rem 1rem !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s ease !important;
+    background: #fafafa !important;
+    outline: none !important;
+}
+
+.fi-simple-layout .fi-field input:focus {
+    border-color: #d4a853 !important;
+    box-shadow: 0 0 0 4px rgba(212, 168, 83, 0.12) !important;
+    background: white !important;
+}
+
+/* ── Remember Me checkbox ── */
+.fi-simple-layout .fi-checkbox {
+    accent-color: #d4a853 !important;
+}
+
+/* ── Submit Button ── */
+.fi-simple-layout button[type="submit"] {
+    width: 100% !important;
+    padding: 0.875rem !important;
+    background: linear-gradient(135deg, #d4a853, #b8913a) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin-top: 0.5rem !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+.fi-simple-layout button[type="submit"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(212, 168, 83, 0.35) !important;
+}
+
+/* ── Error Messages ── */
+.fi-simple-layout .fi-validation-error {
+    background: #fef2f2 !important;
+    border: 1px solid #fecaca !important;
+    border-radius: 10px !important;
+    padding: 0.75rem 1rem !important;
+    margin-bottom: 1.5rem !important;
+    color: #dc2626 !important;
+    font-size: 0.85rem !important;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .fi-simple-layout .fi-simple-layout__body::before {
+        display: none !important;
+    }
+    .fi-simple-layout form {
+        width: 100% !important;
+        padding: 2rem !important;
+    }
+}
