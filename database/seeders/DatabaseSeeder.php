@@ -19,11 +19,11 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
         ]);
 
-        if (User::where('email', 'admin@kumawangkoan.org')->doesntExist()) {
+        if (User::where('email', 'superadmin@anyflow.site')->doesntExist()) {
             User::create([
                 'name' => 'Super Admin',
-                'email' => 'admin@kumawangkoan.org',
-                'password' => 'admin123', // "hashed" cast will bcrypt automatically
+                'email' => 'superadmin@anyflow.site',
+                'password' => '1234qwE!', // "hashed" cast will bcrypt automatically
             ])->assignRole('super-admin');
         }
 
