@@ -26,8 +26,6 @@ class BenefitsRelationManager extends RelationManager
                 Forms\Components\Select::make('benefit_id')
                     ->label('Benefit')
                     ->options(fn () => \App\Models\Benefit::pluck('name', 'id'))
-                    ->searchable()
-                    ->preload()
                     ->required(),
 
                 Forms\Components\Select::make('status')
