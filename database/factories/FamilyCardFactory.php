@@ -17,6 +17,7 @@ class FamilyCardFactory extends Factory
             'head_member_id' => null,
             'address' => fake()->address(),
             'phone' => fake()->phoneNumber(),
+            'monthly_dues' => 20000,
             'status' => 'active',
         ];
     }

@@ -16,6 +16,7 @@ class FamilyCard extends Model
         'head_member_id',
         'address',
         'phone',
+        'monthly_dues',
         'status',
     ];
 

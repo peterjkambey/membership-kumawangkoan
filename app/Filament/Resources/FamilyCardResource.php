@@ -51,6 +51,13 @@ class FamilyCardResource extends Resource
                     ->tel()
                     ->maxLength(20),
 
+                Forms\Components\TextInput::make('monthly_dues')
+                    ->label('Iuran Bulanan (Rp)')
+                    ->numeric()
+                    ->default(20000)
+                    ->prefix('Rp')
+                    ->helperText('Jumlah iuran per KK setiap bulan'),
+
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->options([
@@ -86,6 +93,12 @@ class FamilyCardResource extends Resource
                     ->label('Alamat')
                     ->limit(30)
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('monthly_dues')
+                    ->label('Iuran')
+                    ->money('IDR')
+                    ->sortable()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')

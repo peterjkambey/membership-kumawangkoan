@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schedule;
 
 // Generate tagihan bulanan setiap tanggal 1
-Schedule::command('membership:generate-bills')
+Schedule::command('bills:generate')
     ->monthlyOn(1, '00:00')
     ->withoutOverlapping();
 
