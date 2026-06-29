@@ -37,6 +37,26 @@ class Member extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function ($member) {
+            if (empty($member->membership_number)) {
+                $member->membership_number = 'KMN-' . strtoupper(uniqid());
+            }
+        });
+
+        static::updated(function ($member) {
+            if ($member->wasChanged('status')) {
+                $member->statusLogs()->create([
+                    'previous_status' => $member->getOriginal('status'),
+                    'new_status' => $member->status,
+                    'reason' => 'Status changed during member update.',
+                    'changed_by' => auth()->id(),
+                ]);
+            }
+        });
+    }
+
     public function familyCard(): BelongsTo
     {
         return $this->belongsTo(FamilyCard::class);

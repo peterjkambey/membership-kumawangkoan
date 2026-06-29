@@ -109,10 +109,32 @@ class MemberTest extends TestCase
         $this->assertEquals('Lainnya', (new Member(['family_role' => 'other']))->familyRoleLabel);
     }
 
-    function test_membership_number_can_be_nullable()
+    function test_membership_number_is_auto_generated()
     {
         $member = Member::factory()->create(['membership_number' => null]);
 
-        $this->assertNull($member->membership_number);
+        $this->assertNotNull($member->membership_number);
+        $this->assertStringStartsWith('KMN-', $member->membership_number);
+    }
+
+    function test_status_change_auto_creates_status_log()
+    {
+        $member = Member::factory()->create(['status' => 'active']);
+        $this->assertCount(0, $member->statusLogs);
+
+        $member->update(['status' => 'inactive']);
+
+        $this->assertCount(1, $member->fresh()->statusLogs);
+        $log = $member->fresh()->statusLogs->first();
+        $this->assertEquals('active', $log->previous_status);
+        $this->assertEquals('inactive', $log->new_status);
+    }
+
+    function test_same_status_update_does_not_create_log()
+    {
+        $member = Member::factory()->create(['status' => 'active']);
+        $member->update(['status' => 'active']);
+
+        $this->assertCount(0, $member->fresh()->statusLogs);
     }
 }
