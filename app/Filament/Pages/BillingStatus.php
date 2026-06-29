@@ -28,7 +28,7 @@ class BillingStatus extends Page implements HasTable
 
     protected string $view = 'filament.pages.billing-status';
 
-    public function getTable(): Table
+    public function table(Table $table): Table
     {
         $user = auth()->user();
         $isSuperAdmin = $user && $user->hasRole('super-admin');
@@ -36,7 +36,7 @@ class BillingStatus extends Page implements HasTable
         // Determine which periods to show (past 13 months + current)
         $periods = $this->getPeriods();
 
-        return Table::make($this)
+        return $table
             ->query(
                 FamilyCard::query()
                     ->with(['monthlyBills' => fn ($q) => $q->whereIn('period', $periods)])
@@ -64,7 +64,7 @@ class BillingStatus extends Page implements HasTable
                 TextColumn::make('outstanding')
                     ->label('Tunggakan')
                     ->money('IDR')
-                    ->getStateUsing(fn (FamilyCard $record): float => $this->calculateOutstanding($record)),
+                    ->getStateUsing(fn (FamilyCard $record) => $this->calculateOutstanding($record)),
 
                 // Dynamically add a column per period
                 ...$this->getPeriodColumns($periods),
@@ -108,58 +108,38 @@ class BillingStatus extends Page implements HasTable
             $columns[] = TextColumn::make("bill_{$period}")
                 ->label($label)
                 ->alignCenter()
-                ->getStateUsing(fn (FamilyCard $record): array => $this->getBillState($record, $period))
-                ->formatStateUsing(fn (array $state): string => $state['label'])
-                ->extraAttributes(fn (FamilyCard $record): array => $this->getBillCellAttributes($record, $period))
+                ->getStateUsing(fn (FamilyCard $record) => $this->getBillLabel($record, $period))
+                ->extraAttributes(fn (FamilyCard $record) => $this->getBillCellAttributes($record, $period))
                 ->html();
         }
         return $columns;
     }
 
     /**
-     * Get bill state for a specific KK and period.
+     * Get bill label for a specific KK and period (return HTML string).
      */
-    private function getBillState(FamilyCard $card, string $period): array
+    private function getBillLabel(FamilyCard $card, string $period): string
     {
         $bill = $card->monthlyBills->firstWhere('period', $period);
         if (!$bill) {
-            return [
-                'status' => 'none',
-                'label' => '—',
-                'color' => 'gray',
-            ];
+            return '—';
         }
 
         $totalPaid = (float) Payment::where('monthly_bill_id', $bill->id)->sum('amount');
         $isPaid = $totalPaid >= (float) $bill->amount;
 
         if ($isPaid) {
-            return [
-                'status' => 'paid',
-                'label' => '✓ Lunas',
-                'color' => 'success',
-            ];
+            return '✓ Lunas';
         }
 
         if ($bill->status === 'overdue' || $bill->status === 'unpaid') {
             $remaining = (float) $bill->amount - $totalPaid;
-            $label = $totalPaid > 0
+            return $totalPaid > 0
                 ? "Rp " . number_format($remaining, 0, ',', '.')
                 : '⬜';
-
-            return [
-                'status' => $bill->status,
-                'label' => $label,
-                'color' => $bill->status === 'overdue' ? 'danger' : 'warning',
-                'remaining' => $remaining,
-            ];
         }
 
-        return [
-            'status' => 'unknown',
-            'label' => '?',
-            'color' => 'gray',
-        ];
+        return '?';
     }
 
     /**
@@ -167,14 +147,23 @@ class BillingStatus extends Page implements HasTable
      */
     private function getBillCellAttributes(FamilyCard $card, string $period): array
     {
-        $state = $this->getBillState($card, $period);
+        $bill = $card->monthlyBills->firstWhere('period', $period);
+        if (!$bill) {
+            return ['class' => 'text-gray-400 text-center px-1'];
+        }
 
-        $classes = match ($state['status']) {
-            'paid' => 'bg-green-50 text-green-700 font-medium rounded text-center px-1',
-            'overdue' => 'bg-red-50 text-red-700 font-bold rounded text-center px-1',
-            'unpaid' => 'bg-yellow-50 text-yellow-700 rounded text-center px-1',
-            default => 'text-gray-400 text-center px-1',
-        };
+        $totalPaid = (float) Payment::where('monthly_bill_id', $bill->id)->sum('amount');
+        $isPaid = $totalPaid >= (float) $bill->amount;
+
+        if ($isPaid) {
+            $classes = 'bg-green-50 text-green-700 font-medium rounded text-center px-1';
+        } elseif ($bill->status === 'overdue') {
+            $classes = 'bg-red-50 text-red-700 font-bold rounded text-center px-1';
+        } elseif ($bill->status === 'unpaid') {
+            $classes = 'bg-yellow-50 text-yellow-700 rounded text-center px-1';
+        } else {
+            $classes = 'text-gray-400 text-center px-1';
+        }
 
         return ['class' => $classes];
     }

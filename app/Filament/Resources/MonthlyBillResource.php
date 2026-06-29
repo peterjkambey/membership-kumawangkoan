@@ -73,6 +73,11 @@ class MonthlyBillResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('familyCard.headMember.full_name')
+                    ->label('Kepala Keluarga')
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('period')
                     ->label('Periode')
                     ->sortable(),

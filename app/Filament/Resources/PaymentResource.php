@@ -103,6 +103,11 @@ class PaymentResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('monthlyBill.familyCard.headMember.full_name')
+                    ->label('Kepala Keluarga')
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('monthlyBill.period')
                     ->label('Periode')
                     ->sortable(),
