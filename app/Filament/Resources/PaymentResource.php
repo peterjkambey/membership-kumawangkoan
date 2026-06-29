@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PaymentResource\Pages;
 use App\Models\Payment;
+use App\Services\PaymentAllocator;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -29,48 +30,60 @@ class PaymentResource extends Resource
     {
         return $schema
             ->schema([
-                Forms\Components\Select::make('monthly_bill_id')
-                    ->label('Tagihan')
-                    ->relationship('monthlyBill', 'period', fn ($query) => $query->whereIn('status', ['unpaid', 'overdue']))
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->familyCard?->family_no} - {$record->period} (Rp " . number_format($record->amount, 0, ',', '.') . ")"),
+                \Filament\Schemas\Components\Section::make('Cara Bayar')
+                    ->schema([
+                        Forms\Components\Select::make('family_card_id')
+                            ->label('Bayar per Kartu Keluarga (otomatis alokasi)')
+                            ->relationship('familyCard', 'family_no')
+                            ->searchable()
+                            ->preload()
+                            ->nullable()
+                            ->helperText('Pilih KK untuk bayar semua tunggakan — otomatis dialokasikan ke tagihan terlama'),
 
-                Forms\Components\DatePicker::make('payment_date')
-                    ->label('Tanggal Bayar')
-                    ->required(),
+                        Forms\Components\Select::make('monthly_bill_id')
+                            ->label('Atau bayar tagihan spesifik')
+                            ->relationship('monthlyBill', 'period', fn ($query) => $query->whereIn('status', ['unpaid', 'overdue']))
+                            ->searchable()
+                            ->preload()
+                            ->nullable()
+                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->familyCard?->family_no} - {$record->period} (Rp " . number_format($record->amount, 0, ',', '.') . ")"),
 
-                Forms\Components\TextInput::make('amount')
-                    ->label('Jumlah')
-                    ->numeric()
-                    ->required()
-                    ->prefix('Rp'),
+                        Forms\Components\DatePicker::make('payment_date')
+                            ->label('Tanggal Bayar')
+                            ->required(),
 
-                Forms\Components\Select::make('payment_method')
-                    ->label('Metode Pembayaran')
-                    ->options([
-                        'cash' => 'Tunai',
-                        'transfer' => 'Transfer',
-                        'qris' => 'QRIS',
-                        'virtual_account' => 'Virtual Account',
+                        Forms\Components\TextInput::make('amount')
+                            ->label('Jumlah')
+                            ->numeric()
+                            ->required()
+                            ->prefix('Rp'),
+
+                        Forms\Components\Select::make('payment_method')
+                            ->label('Metode Pembayaran')
+                            ->options([
+                                'cash' => 'Tunai',
+                                'transfer' => 'Transfer',
+                                'qris' => 'QRIS',
+                                'virtual_account' => 'Virtual Account',
+                            ])
+                            ->required(),
+
+                        Forms\Components\TextInput::make('reference_number')
+                            ->label('No. Referensi')
+                            ->maxLength(255),
+
+                        Forms\Components\Select::make('verified_by')
+                            ->label('Diverifikasi Oleh')
+                            ->relationship('verifiedBy', 'name')
+                            ->searchable()
+                            ->preload(),
+
+                        Forms\Components\Textarea::make('notes')
+                            ->label('Catatan')
+                            ->rows(3)
+                            ->columnSpanFull(),
                     ])
-                    ->required(),
-
-                Forms\Components\TextInput::make('reference_number')
-                    ->label('No. Referensi')
-                    ->maxLength(255),
-
-                Forms\Components\Select::make('verified_by')
-                    ->label('Diverifikasi Oleh')
-                    ->relationship('verifiedBy', 'name')
-                    ->searchable()
-                    ->preload(),
-
-                Forms\Components\Textarea::make('notes')
-                    ->label('Catatan')
-                    ->rows(3)
-                    ->columnSpanFull(),
+                    ->columns(2),
             ]);
     }
 

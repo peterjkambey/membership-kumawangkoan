@@ -12,6 +12,7 @@ class Payment extends Model
 
     protected $fillable = [
         'monthly_bill_id',
+        'family_card_id',
         'payment_date',
         'amount',
         'payment_method',
@@ -31,6 +32,11 @@ class Payment extends Model
     public function monthlyBill(): BelongsTo
     {
         return $this->belongsTo(MonthlyBill::class);
+    }
+
+    public function familyCard(): BelongsTo
+    {
+        return $this->belongsTo(FamilyCard::class);
     }
 
     public function verifiedBy(): BelongsTo

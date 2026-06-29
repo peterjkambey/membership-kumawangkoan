@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\FamilyCard;
 use App\Models\Payment;
 use App\Models\MonthlyBill;
 use App\Models\User;
@@ -28,6 +29,16 @@ class PaymentTest extends TestCase
     function test_verified_by_can_be_null()
     {
         $payment = Payment::factory()->create(['verified_by' => null]);
+
         $this->assertNull($payment->verifiedBy);
+    }
+
+    function test_can_belong_to_family_card()
+    {
+        $card = FamilyCard::factory()->create();
+        $payment = Payment::factory()->create(['family_card_id' => $card->id]);
+
+        $this->assertInstanceOf(FamilyCard::class, $payment->familyCard);
+        $this->assertEquals($card->id, $payment->familyCard->id);
     }
 }
