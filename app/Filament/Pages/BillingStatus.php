@@ -36,7 +36,7 @@ class BillingStatus extends Page implements HasTable
         // Determine which periods to show (past 13 months + current)
         $periods = $this->getPeriods();
 
-        return Table::make()
+        return Table::make($this)
             ->query(
                 FamilyCard::query()
                     ->with(['monthlyBills' => fn ($q) => $q->whereIn('period', $periods)])
