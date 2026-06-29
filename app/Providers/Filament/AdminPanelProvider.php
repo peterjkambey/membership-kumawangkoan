@@ -53,6 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
             ])
             ->databaseNotifications()
+            ->profile()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

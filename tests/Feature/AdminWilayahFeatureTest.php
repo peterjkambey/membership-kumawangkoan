@@ -124,13 +124,19 @@ class AdminWilayahFeatureTest extends TestCase
         $this->assertContains($response->status(), [200, 403, 404]);
     }
 
-    /** Users */
-    function test_can_view_users()
+    /** Users - region admin TIDAK bisa akses (hanya superadmin) */
+    function test_cannot_access_users()
     {
         $this->actingAs($this->regionAdmin, 'web');
         $response = $this->get('/admin/users');
-        // Currently Filament resources don't enforce permission checks
-        $this->assertContains($response->status(), [200, 403, 404]);
+        $this->assertContains($response->status(), [403, 404]);
+    }
+
+    function test_cannot_create_user()
+    {
+        $this->actingAs($this->regionAdmin, 'web');
+        $response = $this->get('/admin/users/create');
+        $this->assertContains($response->status(), [403, 404]);
     }
 
     /** E-Card - public route */

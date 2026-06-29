@@ -14,7 +14,7 @@ class RolePermissionTest extends TestCase
 
     function test_all_roles_are_created_by_seeder()
     {
-        foreach (['super-admin', 'finance-admin', 'region-admin', 'body-admin', 'viewer'] as $role) {
+        foreach (['super-admin', 'finance-admin', 'region-admin', 'bp-admin', 'viewer'] as $role) {
             $this->assertDatabaseHas('roles', ['name' => $role]);
         }
     }
@@ -58,9 +58,9 @@ class RolePermissionTest extends TestCase
     function test_user_can_be_assigned_multiple_roles()
     {
         $user = User::factory()->create();
-        $user->assignRole('region-admin', 'body-admin');
+        $user->assignRole('region-admin', 'bp-admin');
         $this->assertTrue($user->hasRole('region-admin'));
-        $this->assertTrue($user->hasRole('body-admin'));
+        $this->assertTrue($user->hasRole('bp-admin'));
     }
 
     function test_all_permissions_exist()

@@ -76,9 +76,9 @@ class RolePermissionSeeder extends Seeder
             'view_notification', 'send_notification',
         ]);
 
-        // Body Admin
-        $bodyAdmin = Role::create(['name' => 'body-admin']);
-        $bodyAdmin->givePermissionTo([
+        // BP Admin (Badan Pembantu)
+                $bpAdmin = Role::create(['name' => 'bp-admin']);
+                $bpAdmin->givePermissionTo([
             'view_support_body', 'create_support_body', 'edit_support_body',
             'view_member',
             'view_dashboard',
