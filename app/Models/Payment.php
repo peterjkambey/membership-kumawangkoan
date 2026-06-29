@@ -29,6 +29,35 @@ class Payment extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function ($payment) {
+            if (empty($payment->reference_number)) {
+                $date = $payment->payment_date ?? now();
+                $dateStr = $date instanceof \Carbon\Carbon ? $date->format('Ymd') : date('Ymd', strtotime($date));
+
+                $latest = Payment::where('reference_number', 'like', "PAY/{$dateStr}/%")
+                    ->lockForUpdate()
+                    ->orderBy('reference_number', 'desc')
+                    ->first();
+
+                $sequence = 1;
+                if ($latest) {
+                    $parts = explode('/', $latest->reference_number);
+                    if (count($parts) === 3) {
+                        $sequence = intval($parts[2]) + 1;
+                    }
+                }
+
+                $payment->reference_number = sprintf(
+                    'PAY/%s/%04d',
+                    $dateStr,
+                    $sequence
+                );
+            }
+        });
+    }
+
     public function monthlyBill(): BelongsTo
     {
         return $this->belongsTo(MonthlyBill::class);

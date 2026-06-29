@@ -41,4 +41,29 @@ class PaymentTest extends TestCase
         $this->assertInstanceOf(FamilyCard::class, $payment->familyCard);
         $this->assertEquals($card->id, $payment->familyCard->id);
     }
+
+    function test_reference_number_auto_generated()
+    {
+        $payment = Payment::factory()->create(['reference_number' => null]);
+
+        $this->assertNotNull($payment->reference_number);
+        $this->assertStringStartsWith('PAY/', $payment->reference_number);
+        $this->assertMatchesRegularExpression('/^PAY\/\d{8}\/\d{4}$/', $payment->reference_number);
+    }
+
+    function test_reference_number_increments_per_day()
+    {
+        $p1 = Payment::factory()->create(['reference_number' => null, 'payment_date' => '2026-07-01']);
+        $p2 = Payment::factory()->create(['reference_number' => null, 'payment_date' => '2026-07-01']);
+
+        $this->assertEquals('PAY/20260701/0001', $p1->reference_number);
+        $this->assertEquals('PAY/20260701/0002', $p2->reference_number);
+    }
+
+    function test_reference_number_can_be_manual()
+    {
+        $payment = Payment::factory()->create(['reference_number' => 'MANUAL-001']);
+
+        $this->assertEquals('MANUAL-001', $payment->reference_number);
+    }
 }

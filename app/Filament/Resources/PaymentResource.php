@@ -70,7 +70,8 @@ class PaymentResource extends Resource
 
                         Forms\Components\TextInput::make('reference_number')
                             ->label('No. Referensi')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText('Kosongi untuk auto-generate'),
 
                         Forms\Components\Select::make('verified_by')
                             ->label('Diverifikasi Oleh')
