@@ -27,9 +27,20 @@ class DatabaseSeeder extends Seeder
             ])->assignRole('super-admin');
         }
 
-        $regions = ['Wilayah 1', 'Wilayah 2', 'Wilayah 3', 'Wilayah 4', 'Wilayah 5', 'Wilayah 6', 'Wilayah 7'];
-        foreach ($regions as $name) {
-            \App\Models\Region::firstOrCreate(['name' => $name]);
+        $regions = [
+            ['name' => 'Wilayah 1 - Tompola', 'code' => 'TMP'],
+            ['name' => 'Wilayah 2 - Mawale', 'code' => 'MWL'],
+            ['name' => 'Wilayah 3 - Tombara\'an', 'code' => 'TMB'],
+            ['name' => 'Wilayah 4 - Lewetan', 'code' => 'LWT'],
+            ['name' => 'Wilayah 5 - Wawona', 'code' => 'WWN'],
+            ['name' => 'Wilayah 6 - Ranowangko', 'code' => 'RNW'],
+            ['name' => 'Wilayah 7 - KuntungMu\'ukur', 'code' => 'KNT'],
+        ];
+        foreach ($regions as $data) {
+            \App\Models\Region::firstOrCreate(
+                ['name' => $data['name']],
+                ['code' => $data['code']]
+            );
         }
     }
 }

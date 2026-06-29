@@ -111,10 +111,37 @@ class MemberTest extends TestCase
 
     function test_membership_number_is_auto_generated()
     {
-        $member = Member::factory()->create(['membership_number' => null]);
+        $region = Region::factory()->create(['code' => 'TST']);
+        $member = Member::factory()->create([
+            'membership_number' => null,
+            'region_id' => $region->id,
+        ]);
 
         $this->assertNotNull($member->membership_number);
-        $this->assertStringStartsWith('KMN-', $member->membership_number);
+        $this->assertStringStartsWith('KMN/TST/', $member->membership_number);
+        $this->assertMatchesRegularExpression('/^KMN\/TST\/\d{4}\/\d{4}$/', $member->membership_number);
+    }
+
+    function test_membership_number_increments_per_region_per_year()
+    {
+        $region = Region::factory()->create(['code' => 'INC']);
+
+        $m1 = Member::factory()->create(['region_id' => $region->id, 'membership_number' => null]);
+        $m2 = Member::factory()->create(['region_id' => $region->id, 'membership_number' => null]);
+
+        $year = now()->format('Y');
+        $this->assertEquals("KMN/INC/{$year}/0001", $m1->membership_number);
+        $this->assertEquals("KMN/INC/{$year}/0002", $m2->membership_number);
+    }
+
+    function test_membership_number_uses_xx_for_unknown_region()
+    {
+        $member = Member::factory()->create([
+            'membership_number' => null,
+            'region_id' => null,
+        ]);
+
+        $this->assertStringStartsWith('KMN/XX/', $member->membership_number);
     }
 
     function test_status_change_auto_creates_status_log()

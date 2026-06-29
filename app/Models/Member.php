@@ -41,7 +41,28 @@ class Member extends Model
     {
         static::creating(function ($member) {
             if (empty($member->membership_number)) {
-                $member->membership_number = 'KMN-' . strtoupper(uniqid());
+                $regionCode = $member->region?->code ?? 'XX';
+                $year = now()->format('Y');
+
+                $latest = Member::where('membership_number', 'like', "KMN/{$regionCode}/{$year}/%")
+                    ->lockForUpdate()
+                    ->orderBy('membership_number', 'desc')
+                    ->first();
+
+                $sequence = 1;
+                if ($latest) {
+                    $parts = explode('/', $latest->membership_number);
+                    if (count($parts) === 4) {
+                        $sequence = intval($parts[3]) + 1;
+                    }
+                }
+
+                $member->membership_number = sprintf(
+                    'KMN/%s/%s/%04d',
+                    $regionCode,
+                    $year,
+                    $sequence
+                );
             }
         });
 

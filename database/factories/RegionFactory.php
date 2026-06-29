@@ -12,6 +12,7 @@ class RegionFactory extends Factory
     public function definition(): array
     {
         return [
+            'code' => strtoupper(fake()->unique()->lexify('???')),
             'name' => fake()->unique()->city() . ' Wilayah',
             'description' => fake()->sentence(),
         ];
