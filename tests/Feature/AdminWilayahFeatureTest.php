@@ -57,6 +57,11 @@ class AdminWilayahFeatureTest extends TestCase
     function test_can_access_family_card_edit_page()
     {
         $card = FamilyCard::factory()->create();
+        // Need a member in admin's region so scoping doesn't filter it out
+        Member::factory()->create([
+            'family_card_id' => $card->id,
+            'region_id' => $this->region->id,
+        ]);
         $this->actingAs($this->regionAdmin, 'web');
         $this->get("/admin/family-cards/{$card->id}/edit")->assertStatus(200);
     }
@@ -76,7 +81,9 @@ class AdminWilayahFeatureTest extends TestCase
 
     function test_can_access_member_edit_page()
     {
-        $member = Member::factory()->create();
+        $member = Member::factory()->create([
+            'region_id' => $this->region->id,
+        ]);
         $this->actingAs($this->regionAdmin, 'web');
         $this->get("/admin/members/{$member->id}/edit")->assertStatus(200);
     }

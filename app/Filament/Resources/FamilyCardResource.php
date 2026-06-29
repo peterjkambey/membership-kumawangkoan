@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class FamilyCardResource extends Resource
 {
@@ -149,6 +150,22 @@ class FamilyCardResource extends Resource
         return [
             MembersRelationManager::class,
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        if (!$user || $user->hasRole('super-admin')) {
+            return $query;
+        }
+
+        if ($user->region_id) {
+            return $query->whereHas('members', fn ($q) => $q->where('region_id', $user->region_id));
+        }
+
+        return $query;
     }
 
     public static function getPages(): array

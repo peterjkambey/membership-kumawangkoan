@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class PaymentResource extends Resource
 {
@@ -166,6 +167,22 @@ class PaymentResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        if (!$user || $user->hasRole('super-admin')) {
+            return $query;
+        }
+
+        if ($user->region_id) {
+            return $query->whereHas('familyCard.members', fn ($q) => $q->where('region_id', $user->region_id));
+        }
+
+        return $query;
     }
 
     public static function getPages(): array

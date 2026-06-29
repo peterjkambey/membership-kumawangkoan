@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserResource extends Resource
 {
@@ -134,6 +135,22 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        if (!$user || $user->hasRole('super-admin')) {
+            return $query;
+        }
+
+        if ($user->region_id) {
+            return $query->where('region_id', $user->region_id);
+        }
+
+        return $query;
     }
 
     public static function getPages(): array

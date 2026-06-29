@@ -13,6 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MemberMembershipResource extends Resource
 {
@@ -121,6 +122,22 @@ class MemberMembershipResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        if (!$user || $user->hasRole('super-admin')) {
+            return $query;
+        }
+
+        if ($user->region_id) {
+            return $query->whereHas('member', fn ($q) => $q->where('region_id', $user->region_id));
+        }
+
+        return $query;
     }
 
     public static function getPages(): array
