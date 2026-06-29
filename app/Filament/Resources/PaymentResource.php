@@ -43,7 +43,12 @@ class PaymentResource extends Resource
 
                         Forms\Components\Select::make('monthly_bill_id')
                             ->label('Atau bayar tagihan spesifik')
-                            ->relationship('monthlyBill', 'period', fn ($query) => $query->whereIn('status', ['unpaid', 'overdue']))
+                            ->relationship('monthlyBill', 'period', fn ($query) => $query
+                                ->whereIn('status', ['unpaid', 'overdue'])
+                                ->when(auth()->user()?->region_id, fn ($q, $regionId) => $q
+                                    ->whereHas('familyCard.members', fn ($qq) => $qq->where('region_id', $regionId))
+                                )
+                            )
                             ->searchable()
                             ->preload()
                             ->nullable()
@@ -179,7 +184,10 @@ class PaymentResource extends Resource
         }
 
         if ($user->region_id) {
-            return $query->whereHas('familyCard.members', fn ($q) => $q->where('region_id', $user->region_id));
+            return $query->where(function ($q) use ($user) {
+                $q->whereHas('familyCard.members', fn ($qq) => $qq->where('region_id', $user->region_id))
+                  ->orWhereHas('monthlyBill.familyCard.members', fn ($qq) => $qq->where('region_id', $user->region_id));
+            });
         }
 
         return $query;

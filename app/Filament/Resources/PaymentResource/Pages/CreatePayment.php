@@ -42,6 +42,14 @@ class CreatePayment extends CreateRecord
 
         // Jika bayar per tagihan spesifik, update status bill
         if ($record->monthly_bill_id) {
+            // Pastikan family_card_id terisi dari bill untuk scoping
+            if (!$record->family_card_id) {
+                $bill = \App\Models\MonthlyBill::find($record->monthly_bill_id);
+                if ($bill && $bill->family_card_id) {
+                    $record->family_card_id = $bill->family_card_id;
+                    $record->saveQuietly();
+                }
+            }
             $this->updateBillStatus($record->monthly_bill_id);
         }
     }
