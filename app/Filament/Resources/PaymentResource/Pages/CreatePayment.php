@@ -39,5 +39,26 @@ class CreatePayment extends CreateRecord
 
             $this->redirect($this->getResource()::getUrl('index'));
         }
+
+        // Jika bayar per tagihan spesifik, update status bill
+        if ($record->monthly_bill_id) {
+            $this->updateBillStatus($record->monthly_bill_id);
+        }
+    }
+
+    /**
+     * Update status monthly bill jika total payment >= amount.
+     */
+    private function updateBillStatus(int $monthlyBillId): void
+    {
+        $bill = \App\Models\MonthlyBill::find($monthlyBillId);
+        if (!$bill) {
+            return;
+        }
+
+        $totalPaid = \App\Models\Payment::where('monthly_bill_id', $bill->id)->sum('amount');
+        if ($totalPaid >= (float) $bill->amount) {
+            $bill->update(['status' => 'paid']);
+        }
     }
 }

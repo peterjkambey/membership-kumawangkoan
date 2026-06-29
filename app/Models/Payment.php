@@ -56,6 +56,35 @@ class Payment extends Model
                 );
             }
         });
+
+        static::saved(function ($payment) {
+            if ($payment->monthly_bill_id) {
+                static::syncBillStatus($payment->monthly_bill_id);
+            }
+        });
+
+        static::deleted(function ($payment) {
+            if ($payment->monthly_bill_id) {
+                static::syncBillStatus($payment->monthly_bill_id);
+            }
+        });
+    }
+
+    /**
+     * Sync monthly bill status based on total payments.
+     */
+    public static function syncBillStatus(int $monthlyBillId): void
+    {
+        $bill = MonthlyBill::find($monthlyBillId);
+        if (!$bill) {
+            return;
+        }
+
+        $totalPaid = Payment::where('monthly_bill_id', $bill->id)->sum('amount');
+        $newStatus = $totalPaid >= (float) $bill->amount ? 'paid' : 'unpaid';
+        if ($bill->status !== $newStatus) {
+            $bill->update(['status' => $newStatus]);
+        }
     }
 
     public function monthlyBill(): BelongsTo
