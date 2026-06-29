@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolePermissionSeeder::class,
+            BenefitSeeder::class,
         ]);
 
         if (User::where('email', 'superadmin@anyflow.site')->doesntExist()) {

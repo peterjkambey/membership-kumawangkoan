@@ -21,6 +21,9 @@ class Member extends Model
         'phone',
         'email',
         'photo',
+        'card_uid',
+        'card_issued_at',
+        'card_status',
         'family_card_id',
         'region_id',
         'membership_number',
@@ -34,6 +37,7 @@ class Member extends Model
         return [
             'birth_date' => 'date',
             'join_date' => 'date',
+            'card_issued_at' => 'date',
         ];
     }
 
@@ -91,6 +95,13 @@ class Member extends Model
     public function supportBodies(): BelongsToMany
     {
         return $this->belongsToMany(SupportBody::class, 'support_body_member')
+            ->withTimestamps();
+    }
+
+    public function benefits(): BelongsToMany
+    {
+        return $this->belongsToMany(Benefit::class, 'member_benefit')
+            ->withPivot(['status', 'granted_by', 'granted_at', 'expires_at', 'notes'])
             ->withTimestamps();
     }
 

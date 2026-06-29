@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Member;
+use App\Models\Benefit;
 use App\Models\FamilyCard;
 use App\Models\Region;
 use App\Models\MemberMembership;
@@ -120,6 +121,41 @@ class MemberTest extends TestCase
         $this->assertNotNull($member->membership_number);
         $this->assertStringStartsWith('KMN/TST/', $member->membership_number);
         $this->assertMatchesRegularExpression('/^KMN\/TST\/\d{4}\/\d{4}$/', $member->membership_number);
+    }
+
+    function test_e_toll_card_fields_are_nullable()
+    {
+        $member = Member::factory()->create([
+            'card_uid' => null,
+            'card_issued_at' => null,
+            'card_status' => 'none',
+        ]);
+
+        $this->assertNull($member->card_uid);
+        $this->assertNull($member->card_issued_at);
+        $this->assertEquals('none', $member->card_status);
+    }
+
+    function test_e_toll_card_can_be_issued()
+    {
+        $member = Member::factory()->create([
+            'card_uid' => 'ETOLL-AAA001',
+            'card_issued_at' => '2026-07-01',
+            'card_status' => 'issued',
+        ]);
+
+        $this->assertEquals('ETOLL-AAA001', $member->card_uid);
+        $this->assertEquals('issued', $member->card_status);
+    }
+
+    function test_member_has_benefits_relationship()
+    {
+        $member = Member::factory()->create();
+        $benefits = Benefit::factory()->count(2)->create();
+        $member->benefits()->attach($benefits->pluck('id'), ['status' => 'eligible']);
+
+        $this->assertCount(2, $member->benefits);
+        $this->assertInstanceOf(\App\Models\Benefit::class, $member->benefits->first());
     }
 
     function test_membership_number_increments_per_region_per_year()

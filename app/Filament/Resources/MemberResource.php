@@ -114,6 +114,29 @@ class MemberResource extends Resource
                             ->required(),
                     ])
                     ->columns(2),
+
+                \Filament\Schemas\Components\Section::make('Kartu E-Toll')
+                    ->schema([
+                        Forms\Components\TextInput::make('card_uid')
+                            ->label('UID Kartu E-Toll')
+                            ->maxLength(50)
+                            ->unique(ignoreRecord: true)
+                            ->helperText('Nomor unik kartu e-toll dari vendor'),
+
+                        Forms\Components\DatePicker::make('card_issued_at')
+                            ->label('Tanggal Terbit Kartu'),
+
+                        Forms\Components\Select::make('card_status')
+                            ->label('Status Kartu')
+                            ->options([
+                                'none' => 'Belum Ada',
+                                'issued' => 'Sudah Terbit',
+                                'lost' => 'Hilang',
+                                'replaced' => 'Diganti',
+                            ])
+                            ->default('none'),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -149,6 +172,28 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('familyCard.family_no')
                     ->label('No. KK')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('card_uid')
+                    ->label('Kartu E-Toll')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('card_status')
+                    ->label('Status Kartu')
+                    ->badge()
+                    ->color(fn (string $state): string => match($state) {
+                        'issued' => 'success',
+                        'lost' => 'danger',
+                        'replaced' => 'warning',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn ($state) => match($state) {
+                        'issued' => 'Terbit',
+                        'lost' => 'Hilang',
+                        'replaced' => 'Diganti',
+                        default => '—',
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('family_role')
                     ->label('Peran')
