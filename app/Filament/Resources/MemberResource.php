@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MemberResource\Pages;
+use App\Filament\Resources\MemberResource\RelationManagers\BenefitsRelationManager;
 use App\Models\Member;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -268,7 +269,9 @@ class MemberResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            BenefitsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

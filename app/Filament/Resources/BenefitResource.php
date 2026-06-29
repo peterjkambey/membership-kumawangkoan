@@ -30,7 +30,7 @@ class BenefitResource extends Resource
     {
         return $schema
             ->schema([
-                Forms\Components\Section::make('Informasi Benefit')
+                \Filament\Schemas\Components\Section::make('Informasi Benefit')
                     ->schema([
                         Forms\Components\TextInput::make('code')
                             ->label('Kode')

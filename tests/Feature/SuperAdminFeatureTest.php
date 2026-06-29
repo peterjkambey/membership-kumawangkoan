@@ -112,6 +112,16 @@ class SuperAdminFeatureTest extends TestCase
         $this->get("/admin/users/{$user->id}/edit")->assertStatus(200);
     }
 
+    function test_can_access_benefit_pages()
+    {
+        $benefit = \App\Models\Benefit::factory()->create();
+        $this->actingAs($this->superAdmin, 'web');
+
+        $this->get('/admin/benefits')->assertStatus(200);
+        $this->get('/admin/benefits/create')->assertStatus(200);
+        $this->get("/admin/benefits/{$benefit->id}/edit")->assertStatus(200);
+    }
+
     /** Data operations - tested via direct model manipulation */
     function test_can_create_data_directly()
     {
